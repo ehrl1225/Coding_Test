@@ -1,6 +1,8 @@
 def minus_one(n):
+    matrix = []
     for i in range(n):
-        yield [-1 if i==j else 1 for j in range(n)]
+        matrix.append([-1 if i==j else 1 for j in range(n)])
+    return matrix
 
 def divide(n, k):
     div_list = []
@@ -17,10 +19,35 @@ def divide(n, k):
 
     return div_list
 
-
 def minus_list(n, k):
     minuses = []
+    if k==1:
+        return minus_one(n)
+    else:
+        for i in divide(n,k):
+            matrix = []
+            for j in i[:-1]:
+                matrix += minus_one(j)[-1]
 
+            for j in minus_one(i[-1]):
+                minuses.append([i for i in matrix]+j)
+        return minuses
+
+def multiply(numbers,target, n,k):
+    count = 0
+    for i in minus_list(n,k):
+        if sum([numbers[j]*i[j] for j in range(len(numbers))]) == target:
+            count+=1
+    return count
+
+def solution(numbers, target):
+    n = len(numbers)
+    answer = 0
+    for i in range(1,n):
+        answer += multiply(numbers,target,n,i)
+    return answer
 
 if __name__ == '__main__':
-    print(divide(10,4))
+    numbers = [1, 1, 1, 1, 1]
+    target = 3
+    print(solution(numbers,target))
