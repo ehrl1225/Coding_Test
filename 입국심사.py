@@ -1,26 +1,31 @@
-def count(time,times):
-    return sum([time//i for i in times])
-
-def search(min_n,n,times):
-    time = 1
-    while n>count(min_n+time-1, times):
-        print(min_n+time-1)
-        counted=count(min_n+time-1,times)
-        if n>counted:
-            min_n=min_n+time-1
+def search(n, times):
+    time = 0
+    min_n = 0
+    count = lambda time: sum([time // i for i in times])
+    num = lambda time: min_n + 2 ** time - 1
+    while n != count(time):
+        counted = count(num(time))
+        if n < counted:
+            min_n = num(time - 1)
+            time = 0
+            continue
         if n == counted:
-            break
-        time*=2
-    if n==count(min_n+time-1, times):
-        return min_n+time-1
-    return search(min_n,n,times)
+            min_c = num(time-1)
+            max_c = num(time)
+            while True:
+                if count((min_c+max_c)//2)<n:
+                    min_c = (min_c+max_c)//2
+                else:
+                    max_c = (min_c+max_c)//2
+                if min_c==(max_c-1):
+                    return max_c
+        time += 1
 
-def solution(n,times):
-    answer = search(0,n,times)
-    return answer
+
+def solution(n, times):
+    return search(n, times)
 
 if __name__ == '__main__':
-    n=6
+    n = 6
     times = [7,10]
-    # print(count(10,times))
     print(solution(n,times))
